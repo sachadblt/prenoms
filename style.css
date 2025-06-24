@@ -88,6 +88,7 @@ button:hover {
     margin-bottom: 10px;
 }
 
+/* Base style for name rectangles */
 .name-rectangle {
     background-color: #e9ecef;
     border: 1px solid #ced4da;
@@ -95,7 +96,7 @@ button:hover {
     padding: 15px 20px;
     margin: 10px;
     cursor: pointer;
-    display: inline-block; /* Allows them to sit next to each other */
+    display: inline-block;
     min-width: 120px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -109,42 +110,88 @@ button:hover {
 
 #nameRectanglesContainer {
     display: flex;
-    flex-wrap: wrap; /* Allow rectangles to wrap to the next line */
-    gap: 10px; /* Space between rectangles */
-    justify-content: center; /* Center them */
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    perspective: 1000px; /* Needed for 3D flip effect */
 }
 
-/* FULLSCREEN DISPLAY FOR CLICKED NAME */
+/* Styles for 2-player flip card */
+.name-rectangle.flip-card {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    /* Ensure the content is visible only on the front/back */
+    /* backface-visibility: hidden; will be applied to inner faces if we use them */
+}
+
+/* No transform for the card itself, but for its content when flipped */
+.name-rectangle.flip-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.name-rectangle .card-front,
+.name-rectangle .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Hide the back of the element when facing the user */
+    display: flex; /* For centering content */
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px; /* Match parent border-radius */
+    padding: 15px 20px; /* Match parent padding */
+    box-sizing: border-box; /* Include padding in dimensions */
+}
+
+.name-rectangle .card-back {
+    transform: rotateY(180deg); /* Rotate the back face initially */
+    background-color: #cceeff; /* Different color for the back */
+    color: #0056b3;
+}
+
+/* When the parent is flipped, the back comes to the front */
+.name-rectangle.flipped .card-front {
+    transform: rotateY(180deg); /* Hide the front face when flipped */
+}
+.name-rectangle.flipped .card-back {
+    transform: rotateY(0deg); /* Show the back face when flipped */
+}
+
+
+/* FULLSCREEN DISPLAY FOR CLICKED NAME (when not 2 players) */
 #clickedNameDisplaySection {
-    position: fixed; /* Fixed position to cover the viewport */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white overlay */
-    display: flex; /* Use flexbox for centering content */
-    flex-direction: column; /* Stack items vertically */
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
-    z-index: 1000; /* Ensure it's on top of everything else */
-    padding: 20px; /* Add some padding */
-    box-sizing: border-box; /* Include padding in element's total width and height */
+    background-color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 #clickedNameText {
-    font-size: 4em; /* Much larger font size */
+    font-size: 4em;
     font-weight: bold;
     color: #0056b3;
     text-align: center;
-    max-width: 90%; /* Prevent text from going too wide */
-    word-break: break-word; /* Break long words */
+    max-width: 90%;
+    word-break: break-word;
 }
 
 .close-button {
     position: absolute;
-    top: 20px; /* More padding from top */
-    right: 30px; /* More padding from right */
-    font-size: 3em; /* Larger close button */
+    top: 20px;
+    right: 30px;
+    font-size: 3em;
     cursor: pointer;
     color: #888;
     line-height: 1;
@@ -174,7 +221,7 @@ body.night-mode .container {
 
 body.night-mode h1,
 body.night-mode h2 {
-    color: #8ab4f8; /* Lighter blue for headings in dark mode */
+    color: #8ab4f8;
 }
 
 body.night-mode .card {
@@ -216,7 +263,7 @@ body.night-mode .name-rectangle:hover {
 }
 
 body.night-mode #clickedNameDisplaySection {
-    background-color: rgba(44, 44, 44, 0.95); /* Darker semi-transparent overlay */
+    background-color: rgba(44, 44, 44, 0.95);
 }
 
 body.night-mode #clickedNameText {
@@ -229,4 +276,9 @@ body.night-mode .close-button {
 
 body.night-mode .close-button:hover {
     color: #ddd;
+}
+
+body.night-mode .name-rectangle .card-back {
+    background-color: #5577aa; /* Darker back for night mode */
+    color: #f0f0f0;
 }

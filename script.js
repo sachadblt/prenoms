@@ -93,24 +93,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Panel 2: Displaying Names as Clickable Rectangles ---
     const displayNames = () => {
         nameRectanglesContainer.innerHTML = ''; // Clear previous rectangles
-        names.forEach(name => {
+        const isTwoPlayers = (names.length === 2);
+
+        names.forEach((name, index) => {
             const rectangle = document.createElement('div');
             rectangle.classList.add('name-rectangle');
-            rectangle.textContent = name;
-            rectangle.addEventListener('click', () => {
-                showClickedName(name);
-            });
+
+            if (isTwoPlayers) {
+                // For 2 players, create flip card structure
+                rectangle.classList.add('flip-card');
+                rectangle.dataset.originalName = name; // Store original name
+                rectangle.dataset.currentIndex = index; // Store its original index
+
+                const cardFront = document.createElement('div');
+                cardFront.classList.add('card-front');
+                cardFront.textContent = name;
+                rectangle.appendChild(cardFront);
+
+                const cardBack = document.createElement('div');
+                cardBack.classList.add('card-back');
+                cardBack.textContent = names[(index + 1) % 2]; // The other player's name
+                rectangle.appendChild(cardBack);
+
+                rectangle.addEventListener('click', () => {
+                    // Toggle the 'flipped' class
+                    rectangle.classList.toggle('flipped');
+                });
+
+            } else {
+                // For non-2 players, simple rectangle with text
+                rectangle.textContent = name;
+                rectangle.addEventListener('click', () => {
+                    // This is the "same effect as the cross" logic
+                    showClickedName(name); // Show fullscreen for this name
+                });
+            }
             nameRectanglesContainer.appendChild(rectangle);
         });
     };
 
-    // --- Panel 3: After Clicking a Rectangle ---
+    // --- Panel 3: After Clicking a Rectangle (Non-2-Player) ---
     const showClickedName = (name) => {
         clickedNameText.textContent = `${name}`;
         namesDisplaySection.style.display = 'none'; // Hide name display
-        clickedNameDisplaySection.style.display = 'flex'; // Use flex to match CSS centering
-        // Prevent body from scrolling when fullscreen is active (optional, but good UX)
-        document.body.style.overflow = 'hidden';
+        clickedNameDisplaySection.style.display = 'flex'; // Show clicked name display (fullscreen)
+        document.body.style.overflow = 'hidden'; // Prevent body from scrolling
     };
 
     closeClickedName.addEventListener('click', () => {
@@ -121,16 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Settings Button ---
     settingsButton.addEventListener('click', () => {
-        // Toggle visibility of input section
         if (inputSection.style.display === 'none') {
+            // If currently viewing names, switch to settings
             inputSection.style.display = 'block';
             namesDisplaySection.style.display = 'none';
             clickedNameDisplaySection.style.display = 'none';
-            document.body.style.overflow = ''; // Ensure scrolling is enabled if we go back to settings
-            // Optionally repopulate inputs if names exist
+            document.body.style.overflow = ''; // Ensure scrolling is enabled
+
+            // Repopulate inputs if names exist
             if (names.length > 0) {
                 numPeopleInput.value = names.length;
-                numPeopleInput.dispatchEvent(new Event('input')); // Trigger input event to create fields
+                // Trigger input event to generate name input fields
+                numPeopleInput.dispatchEvent(new Event('input'));
                 names.forEach((name, index) => {
                     const input = document.getElementById(`nameInput-${index}`);
                     if (input) input.value = name;
@@ -138,14 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveNamesButton.style.display = 'block';
             }
         } else {
-            // If input section is already visible, and names are loaded,
-            // go back to name display if names exist.
+            // If currently in settings and names are set, go back to names display
             if (names.length > 0) {
                 inputSection.style.display = 'none';
                 namesDisplaySection.style.display = 'block';
             }
+            // If in settings and no names are set, do nothing or provide a message
         }
     });
+
 
     // --- Initialize on Load ---
     const storedNames = loadNamesFromLocalStorage();
