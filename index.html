@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Noms</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Gestion des Noms</h1>
+        <button id="settingsButton" class="icon-button">&#9881;</button> </header>
+
+    <section id="inputSection" class="card">
+        <h2>Combien de personnes ?</h2>
+        <input type="number" id="numPeopleInput" min="1" placeholder="Entrez un nombre">
+        <div id="nameInputsContainer">
+        </div>
+        <button id="saveNamesButton" style="display: none;">Valider les noms</button>
+        <div class="night-mode-toggle">
+            <label for="nightModeToggle">Mode Nuit</label>
+            <input type="checkbox" id="nightModeToggle">
+        </div>
+    </section>
+
+    <section id="namesDisplaySection" class="card" style="display: none;">
+        <h2>Prénoms :</h2>
+        <div id="nameRectanglesContainer">
+        </div>
+    </section>
+
+    <section id="clickedNameDisplaySection" class="card" style="display: none;">
+        <span id="closeClickedName" class="close-button">&times;</span>
+        <p id="clickedNameText"></p>
+    </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top instead of center */
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 20px; /* Add some padding around the content */
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Limit overall width */
+    margin-top: 20px; /* Space from the top */
+    position: relative; /* Needed for z-index context if using multiple layers */
+    z-index: 1; /* Ensure container is below the fullscreen overlay */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+h1, h2 {
+    color: #0056b3;
+    margin-top: 0;
+}
+
+.card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+input[type="number"],
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #007bff;
+    padding: 5px;
+}
+
+.icon-button:hover {
+    color: #0056b3;
+}
+
+#nameInputsContainer div {
+    margin-bottom: 10px;
+}
+
+.name-rectangle {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin: 10px;
+    cursor: pointer;
+    display: inline-block; /* Allows them to sit next to each other */
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.name-rectangle:hover {
+    background-color: #d6d9dc;
+    transform: translateY(-2px);
+}
+
+#nameRectanglesContainer {
+    display: flex;
+    flex-wrap: wrap; /* Allow rectangles to wrap to the next line */
+    gap: 10px; /* Space between rectangles */
+    justify-content: center; /* Center them */
+}
+
+/* FULLSCREEN DISPLAY FOR CLICKED NAME */
+#clickedNameDisplaySection {
+    position: fixed; /* Fixed position to cover the viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white overlay */
+    display: flex; /* Use flexbox for centering content */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    z-index: 1000; /* Ensure it's on top of everything else */
+    padding: 20px; /* Add some padding */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+#clickedNameText {
+    font-size: 4em; /* Much larger font size */
+    font-weight: bold;
+    color: #0056b3;
+    text-align: center;
+    max-width: 90%; /* Prevent text from going too wide */
+    word-break: break-word; /* Break long words */
+}
+
+.close-button {
+    position: absolute;
+    top: 20px; /* More padding from top */
+    right: 30px; /* More padding from right */
+    font-size: 3em; /* Larger close button */
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+.night-mode-toggle {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Night Mode Styles */
+body.night-mode {
+    background-color: #2c2c2c;
+    color: #f0f0f0;
+}
+
+body.night-mode .container {
+    background-color: #3c3c3c;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.night-mode h1,
+body.night-mode h2 {
+    color: #8ab4f8; /* Lighter blue for headings in dark mode */
+}
+
+body.night-mode .card {
+    background-color: #4a4a4a;
+    border-color: #555;
+}
+
+body.night-mode input[type="number"],
+body.night-mode input[type="text"] {
+    background-color: #555;
+    border-color: #666;
+    color: #f0f0f0;
+}
+
+body.night-mode button {
+    background-color: #6699ff;
+}
+
+body.night-mode button:hover {
+    background-color: #4f88ff;
+}
+
+body.night-mode .icon-button {
+    color: #8ab4f8;
+}
+
+body.night-mode .icon-button:hover {
+    color: #b0d2ff;
+}
+
+body.night-mode .name-rectangle {
+    background-color: #5a5a5a;
+    border-color: #6a6a6a;
+    color: #f0f0f0;
+}
+
+body.night-mode .name-rectangle:hover {
+    background-color: #6a6a6a;
+}
+
+body.night-mode #clickedNameDisplaySection {
+    background-color: rgba(44, 44, 44, 0.95); /* Darker semi-transparent overlay */
+}
+
+body.night-mode #clickedNameText {
+    color: #8ab4f8;
+}
+
+body.night-mode .close-button {
+    color: #aaa;
+}
+
+body.night-mode .close-button:hover {
+    color: #ddd;
+}
