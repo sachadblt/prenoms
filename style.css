@@ -20,7 +20,7 @@ body {
     width: 100%;
     max-width: 600px; /* Limit overall width */
     margin-top: 20px; /* Space from the top */
-    position: relative; /* Needed for z-index context if using multiple layers */
+    position: relative;
     z-index: 1; /* Ensure container is below the fullscreen overlay */
 }
 
@@ -88,7 +88,7 @@ button:hover {
     margin-bottom: 10px;
 }
 
-/* Base style for name rectangles */
+/* Base style for name rectangles (small ones) */
 .name-rectangle {
     background-color: #e9ecef;
     border: 1px solid #ced4da;
@@ -113,62 +113,16 @@ button:hover {
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
-    perspective: 1000px; /* Needed for 3D flip effect */
 }
 
-/* Styles for 2-player flip card */
-.name-rectangle.flip-card {
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.6s;
-    /* Ensure the content is visible only on the front/back */
-    /* backface-visibility: hidden; will be applied to inner faces if we use them */
-}
-
-/* No transform for the card itself, but for its content when flipped */
-.name-rectangle.flip-card.flipped {
-    transform: rotateY(180deg);
-}
-
-.name-rectangle .card-front,
-.name-rectangle .card-back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden; /* Hide the back of the element when facing the user */
-    display: flex; /* For centering content */
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px; /* Match parent border-radius */
-    padding: 15px 20px; /* Match parent padding */
-    box-sizing: border-box; /* Include padding in dimensions */
-}
-
-.name-rectangle .card-back {
-    transform: rotateY(180deg); /* Rotate the back face initially */
-    background-color: #cceeff; /* Different color for the back */
-    color: #0056b3;
-}
-
-/* When the parent is flipped, the back comes to the front */
-.name-rectangle.flipped .card-front {
-    transform: rotateY(180deg); /* Hide the front face when flipped */
-}
-.name-rectangle.flipped .card-back {
-    transform: rotateY(0deg); /* Show the back face when flipped */
-}
-
-
-/* FULLSCREEN DISPLAY FOR CLICKED NAME (when not 2 players) */
+/* FULLSCREEN DISPLAY FOR CLICKED NAME (including 2-player flip) */
 #clickedNameDisplaySection {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white overlay */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -176,15 +130,54 @@ button:hover {
     z-index: 1000;
     padding: 20px;
     box-sizing: border-box;
+    cursor: pointer; /* Indicate it's clickable to dismiss/flip */
+
+    /* For 2-player flip effect on the whole fullscreen "card" */
+    perspective: 1000px; /* Needed for 3D flip effect */
 }
 
-#clickedNameText {
-    font-size: 4em;
-    font-weight: bold;
-    color: #0056b3;
+/* Container for the actual text inside the fullscreen card, so it can flip */
+#clickedNameDisplaySection .fullscreen-card-content {
+    position: relative;
+    width: 80%; /* Adjust size of the "card" within fullscreen */
+    max-width: 400px; /* Max width for the card */
+    height: 60%; /* Adjust height of the "card" */
+    max-height: 300px;
     text-align: center;
-    max-width: 90%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    border-radius: 8px; /* Match container style */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Add shadow for card feel */
+}
+
+/* Front and back faces of the fullscreen card */
+#clickedNameDisplaySection .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Hide the back of the element when facing the user */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #e9ecef; /* Default card color */
+    color: #0056b3; /* Default text color */
+    font-size: 3em; /* Large text for fullscreen */
+    font-weight: bold;
     word-break: break-word;
+}
+
+#clickedNameDisplaySection .card-back {
+    transform: rotateY(180deg);
+    background-color: #cceeff; /* Different color for the back */
+    color: #0056b3;
+}
+
+/* When the fullscreen card is flipped */
+#clickedNameDisplaySection.flipped .fullscreen-card-content {
+    transform: rotateY(180deg);
 }
 
 .close-button {
@@ -195,6 +188,7 @@ button:hover {
     cursor: pointer;
     color: #888;
     line-height: 1;
+    z-index: 1001; /* Ensure close button is always on top */
 }
 
 .close-button:hover {
@@ -266,8 +260,14 @@ body.night-mode #clickedNameDisplaySection {
     background-color: rgba(44, 44, 44, 0.95);
 }
 
-body.night-mode #clickedNameText {
-    color: #8ab4f8;
+body.night-mode #clickedNameDisplaySection .card-face {
+    background-color: #5a5a5a;
+    color: #f0f0f0;
+}
+
+body.night-mode #clickedNameDisplaySection .card-back {
+    background-color: #5577aa;
+    color: #f0f0f0;
 }
 
 body.night-mode .close-button {
@@ -276,9 +276,4 @@ body.night-mode .close-button {
 
 body.night-mode .close-button:hover {
     color: #ddd;
-}
-
-body.night-mode .name-rectangle .card-back {
-    background-color: #5577aa; /* Darker back for night mode */
-    color: #f0f0f0;
 }
